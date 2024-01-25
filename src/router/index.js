@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ModalData from '@/components/ModalData.vue'
+import QuizViewVue from '@/views/QuizView.vue'
 
 
 const router = createRouter({
@@ -17,7 +18,7 @@ const router = createRouter({
       }]
     },
     {
-      path: '/',
+      path: '/home',
       name: 'homeAlt',
       component: HomeView,
       children:[{
@@ -26,6 +27,12 @@ const router = createRouter({
         component: ModalData
       }]
     },
+    {
+      path: '/quiz',
+      name: 'quiz',
+      component: QuizViewVue,
+    },
+
   ]
 })
 

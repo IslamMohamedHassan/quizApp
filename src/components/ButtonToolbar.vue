@@ -37,7 +37,7 @@ export default {
         }
     },
     computed:{
-        ...mapState(formStore,["getContainerMultipleChoiceOption"])
+        ...mapState(formStore,["getFormList"])
     },
     components:{
     }
@@ -50,7 +50,7 @@ export default {
       this.isVertical = window.innerWidth >= 600;
     },
     printObj(){
-        console.log(this.getContainerMultipleChoiceOption);
+        console.log(this.getFormList);
     }
        
     },

@@ -9,18 +9,19 @@
       
         <Sortable
         :key="sortableKey"
-        :list="getContainerMultipleChoiceOption"
+        :list="getFormList"
         :options="sortableOptions"
         tag="div"
         item-key="id"
         @update="onSortUpdate"
         @change="onSortChange"
-        
       >
-        <template #item="{ element, index }">
-          <div :data-id="element.id"> 
+      <template #item="{ element, index }">
+        <transition-group name="fade"  appear>
+            <div :data-id="element.id" :key="index"> 
               <FormComponent  :componentIndex="index" :data="element" />
-          </div>
+            </div>
+            </transition-group>
         </template>
       </Sortable>
       <div class="fixed-button-toolbar" :style="`top: ${buttonToolbarPosition}px ;`">
@@ -55,7 +56,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
     return {
     
       sortableOptions: {
-        animation: 400,
+        animation: 500,
         easing: 'cubic-bezier(1, 0, 0, 1)',
         handle: '.handle',
         isDragging: false,
@@ -67,7 +68,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
     };
  },
  watch: {
-    getContainerMultipleChoiceOption(newList) {
+    getFormList(newList) {
       if (newList.length !== this.currentListLength) {
         this.currentListLength = newList.length;
         this.forceUpdateKey();
@@ -75,7 +76,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
     },
   },
   computed: {
-     ...mapState(formStore, ['sortableKey','forceUpdateFlag','buttonToolbarPosition','getContainerMultipleChoiceOption','containerMultipleChoiceOption']),
+     ...mapState(formStore, ['sortableKey','forceUpdateFlag','buttonToolbarPosition','getFormList','formList']),
   },
   methods: {
      ...mapActions(formStore, ['incrementSortableKey','duplicateComponent', 'removeComponent','updateContainerMultipleChoiceOrder']),
@@ -93,8 +94,8 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
  
  },
  mounted(){
-  this.currentListLength = this.getContainerMultipleChoiceOption.length;
-  console.log("start",this.getContainerMultipleChoiceOption);
+  this.currentListLength = this.getFormList.length;
+  console.log("start",this.getFormList);
   console.log("aaa");
  }
 
@@ -109,7 +110,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
 .home-comp{
   background-color: #f0ebf8;
   height: 100%;
-  min-height: 100vh;
+  /* min-height: 100vh; */
 }
 
 .fixed-button-toolbar {
@@ -154,5 +155,23 @@ import HeaderComponent from '@/components/HeaderComponent.vue';
     bottom: 0px !important;
   }
 }
+
+
+/* transition component */
+.fade-enter-from{
+  opacity: .7;
+}
+.fade-enter-active{
+  transition: all .2s linear;
+}
+.fade-leave-to{
+  transition: all .2s linear;
+  opacity: .7;
+}
+.fade-move{
+  transition: all .2s linear;
+
+}
+
 
 </style>

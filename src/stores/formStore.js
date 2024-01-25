@@ -6,7 +6,7 @@ export const formStore = defineStore('formStore', {
 
   state: () => ({
     // component data
-      containerMultipleChoiceOption: [{
+      formList: [{
         formInfo :{section : 1 , sectionTitle : 'Untitled form',sectionDescription :'Form Description'},
          data : [{ id:1 , placeholder: `Option`, image: null ,label:1 , value:'' , showImgIcon : false ,showImgAltIcon :false }],
       // flag to display other button
@@ -14,11 +14,13 @@ export const formStore = defineStore('formStore', {
       selectedValue : 'Multiple Choice',
       selectedIcon : svgIcons.multipleChoice,
       questionValue : "Initial content",
-      questionImg : "",
+      imageFileDataUrl : "",
       selectedInput: 'radio',
       required: false,
       isSelected: false,
       regularOptions : [""],
+      answerKeySelected : false,
+      questionMark : 0
       }] ,
       // end component data
 
@@ -44,8 +46,8 @@ export const formStore = defineStore('formStore', {
   
   getters: {
 
-    getContainerMultipleChoiceOption() {
-      return this.containerMultipleChoiceOption;
+    getFormList() {
+      return this.formList;
     },
 
   //  options data
@@ -59,86 +61,100 @@ export const formStore = defineStore('formStore', {
   }, 
   actions: {
 
+    toggleAnswerKey(componentIndex){
+      this.formList[componentIndex].answerKeySelected = false
+    },
 
-    // handleUploadImg(index, event ,type) {
-    //   const fileInput = event.target;
-    //   const file = fileInput.files[0];
-    // if ( type === 'Question') {
-    //   this.getContainerMultipleChoiceOption[index].questionImg = file
-    // }else{
-    //   console.log(this.getContainerMultipleChoiceOption[index].data.image); 
-    // }
-    
+    answerKey(componentIndex){
+      // console.log(componentIndex);
+      console.log(this.formList[componentIndex].answerKeySelected);
+      this.formList[componentIndex].answerKeySelected = true
+      console.log(this.formList[componentIndex].answerKeySelected);
+    },
 
-    // },
-    handleUploadImg(index, event, type, optionIndex) {
+    // upload img func
+    handleUploadImg(componentIndex, event, type, optionIndex) {
       const fileInput = event.target;
       const file = fileInput.files[0];
+      const reader = new FileReader();
 
-      if (type === 'Question') {
-          // this.getContainerMultipleChoiceOption[index].questionImg = file;
-      } else {
-          // Update the image file for the specific option
-          console.log('inside ans');
-          console.log(this.getContainerMultipleChoiceOption[index].data[optionIndex].image);
-          // console.log(optionIndex);
-          this.getContainerMultipleChoiceOption[index].data[optionIndex].image = file
+    reader.onload = () => {
+
+      if(type === 'Question'){
+        // Update the image data URL for the specific option
+        // this.getFormList[componentIndex].imageFile = file;
+        this.getFormList[componentIndex].imageFileDataUrl = reader.result;
+      } else if((type === 'Answer')){
+        this.getFormList[componentIndex].data[optionIndex].image = reader.result;
       }
+    };
+    
+    reader.readAsDataURL(file);
+    
+      // const formData = new FormData
+      // formData.append('file', file);
+      // if (type === 'Question') {
+      //     this.getFormList[componentIndex].questionImg = formData;
+      // } else if ((type === 'Answer')) {
+      //     // Update the image file for the specific option
+      //     this.getFormList[componentIndex].data[optionIndex].image = formData
+      // }
       console.log(type);
-  },
+      },
+
 
     updateContent(newContent,title,id) {
       if(title === "question"){
-        this.containerMultipleChoiceOption[id].questionValue = newContent.target.innerText
+        this.formList[id].questionValue = newContent.target.innerText
       }
       if(title === "title"){
-        this.containerMultipleChoiceOption[id].formInfo.sectionTitle = newContent.target.innerText
+        this.formList[id].formInfo.sectionTitle = newContent.target.innerText
       }
       if(title === "description"){
-        this.containerMultipleChoiceOption[id].formInfo.sectionDescription = newContent.target.innerText
+        this.formList[id].formInfo.sectionDescription = newContent.target.innerText
       }
     },
 
   // add new form component
   addComponent() {
-    const selectedIndex = this.containerMultipleChoiceOption.findIndex(item => item.isSelected);
+    const selectedIndex = this.formList.findIndex(item => item.isSelected);
     // If an item is selected, insert the new component under the selected one
     if (selectedIndex !== -1) {
-      this.containerMultipleChoiceOption.splice(selectedIndex + 1, 0, {
+      this.formList.splice(selectedIndex + 1, 0, {
         formInfo :{section : 1 , sectionTitle : 'Untitled form',sectionDescription :'Form Description'},
-      data : [{ id: this.getContainerMultipleChoiceOption.length + 1 , placeholder: `Option`, image: null ,label:1 , value:'', showImgIcon : false ,showImgAltIcon :false }],
+      data : [{ id: this.getFormList.length + 1 , placeholder: `Option`, image: null ,label:1 , value:'', showImgIcon : false ,showImgAltIcon :false }],
     // flag to display other button
     addOtherBtn : true,
     selectedValue : 'Multiple Choice',
     questionValue : "Initial content",
-    questionImg : "",
+    imageFileDataUrl : "",
     selectedInput: 'radio',
     regularOptions : [""],
    });
     } else {
       // If no item is selected, add the new component at the end
-      this.containerMultipleChoiceOption.push({
+      this.formList.push({
         formInfo :{section : 1 , sectionTitle : 'Untitled form',sectionDescription :'Form Description'},
-        data : [{ id: this.getContainerMultipleChoiceOption.length + 1 , placeholder: `Option`, image: null ,label:1 , value:'', showImgIcon : false ,showImgAltIcon :false }],
+        data : [{ id: this.getFormList.length + 1 , placeholder: `Option`, image: null ,label:1 , value:'', showImgIcon : false ,showImgAltIcon :false }],
       // flag to display other button
       addOtherBtn : true,
       selectedValue : 'Multiple Choice',
       questionValue : "Initial content",
-      questionImg : "",
+      imageFileDataUrl : "",
       selectedInput: 'radio',
       regularOptions : [""],
       });
     }
     this.incrementSortableKey();
-    console.log( 'after add component',this.containerMultipleChoiceOption);
+    console.log( 'after add component',this.formList);
 
   },
 
    //  function to pass the comp id from th component to store 
    duplicateComponent(originalIndex) {
-    if (originalIndex >= 0 && originalIndex < this.containerMultipleChoiceOption.length) {
+    if (originalIndex >= 0 && originalIndex < this.formList.length) {
       // Duplicate the component
-      const originalComponent = this.containerMultipleChoiceOption[originalIndex];
+      const originalComponent = this.formList[originalIndex];
       const duplicatedArray = JSON.parse(JSON.stringify(originalComponent));
 
       // Assign a new and unique ID to the duplicated component
@@ -147,13 +163,13 @@ export const formStore = defineStore('formStore', {
       });
 
       // Create a new array with the duplicated component
-      const newArray = [...this.containerMultipleChoiceOption];
+      const newArray = [...this.formList];
       newArray.splice(originalIndex + 1, 0, duplicatedArray);
 
       // Update the state with the new array
-      this.containerMultipleChoiceOption = newArray;
+      this.formList = newArray;
       this.incrementSortableKey()
-      console.log( 'after duplicate comp',this.containerMultipleChoiceOption);
+      console.log( 'after duplicate comp',this.formList);
 
     }
   },
@@ -161,10 +177,10 @@ export const formStore = defineStore('formStore', {
   //  remove Component 
   removeComponent(index) {
     // Remove the component at the specified index
-    if (index >= 0 && index < this.containerMultipleChoiceOption.length) {
-      this.containerMultipleChoiceOption.splice(index, 1);
+    if (index >= 0 && index < this.formList.length) {
+      this.formList.splice(index, 1);
       this.incrementSortableKey()
-      console.log( 'after remove comp',this.containerMultipleChoiceOption);
+      console.log( 'after remove comp',this.formList);
 
     }
   },
@@ -173,9 +189,9 @@ export const formStore = defineStore('formStore', {
   },
 
 selectElement(componentIndex) {
-  if (componentIndex >= 0 && componentIndex < this.containerMultipleChoiceOption.length) {
+  if (componentIndex >= 0 && componentIndex < this.formList.length) {
     // Reset isSelected property for all items
-    this.containerMultipleChoiceOption.forEach((item) => {
+    this.formList.forEach((item) => {
       item.isSelected = false;
     });
 
@@ -191,7 +207,7 @@ selectElement(componentIndex) {
     }
 
     // Set isSelected property for the selected item
-    this.containerMultipleChoiceOption[componentIndex].isSelected = true;
+    this.formList[componentIndex].isSelected = true;
   } else {
     console.error(`removed`);
   }
@@ -200,36 +216,44 @@ selectElement(componentIndex) {
   //  Add Option to multiple Choices & CheckBox & Dropdown 
   addOption(optionName,componentId) {
     this.count++
-      this.containerMultipleChoiceOption[componentId].data.push({ id: this.count,  placeholder: optionName, image: null, value:'', showImgIcon : false ,showImgAltIcon :false });
+      this.formList[componentId].data.push({ id: this.count,  placeholder: optionName, image: null, value:'', showImgIcon : false ,showImgAltIcon :false });
       this.resetOptionIdsAndLabels(componentId)
   },
 
     // fun to change select box values
     updateSelectedValue(value,icon,componentId) {
-      this.containerMultipleChoiceOption[componentId].selectedValue = value;
-      this.containerMultipleChoiceOption[componentId].selectedIcon= icon;
+      this.formList[componentId].selectedValue = value;
+      this.formList[componentId].selectedIcon= icon;
       const [inputType ]= this.optionValues.filter(option => option.value == value)
-      this.containerMultipleChoiceOption[componentId].selectedInput = inputType.inputType;
-      console.log( 'after update dropdown',this.containerMultipleChoiceOption);
+      this.formList[componentId].selectedInput = inputType.inputType;
+      console.log( 'after update dropdown',this.formList);
         
     },
 
     //  Remove Option From multiple Choices & CheckBox & Dropdown 
     removeOption(id,componentId){
-      const indexToRemove = this.containerMultipleChoiceOption[componentId].data.findIndex(option => option.id === id);
+      const indexToRemove = this.formList[componentId].data.findIndex(option => option.id === id);
       // Remove the option using splice
-    this.containerMultipleChoiceOption[componentId].data.splice(indexToRemove, 1);
+    this.formList[componentId].data.splice(indexToRemove, 1);
 
     this.resetOptionIdsAndLabels(componentId);
-    console.log( 'after remove option',this.containerMultipleChoiceOption);
+    console.log( 'after remove option',this.formList);
+  },
+  removeOptionImg(componentIndex,optionIndex){
+   if (optionIndex == 'Question') {
+     this.getFormList[componentIndex].imageFileDataUrl = null;
+  }else{
+    this.formList[componentIndex].data[optionIndex].image = null;
+  }
+
   },
 
     // Make The Options Ordered
     resetOptionIdsAndLabels(componentId) {
   
-  const regularOptions = this.containerMultipleChoiceOption[componentId].data.filter(option => option.placeholder === "Option");
+  const regularOptions = this.formList[componentId].data.filter(option => option.placeholder === "Option");
   let optionCounter = 0;
-    this.containerMultipleChoiceOption[componentId].data.forEach((option, index) => {
+    this.formList[componentId].data.forEach((option, index) => {
         if (option.placeholder === 'Option') {
             option.id = index + 1;
             option.label = ++optionCounter;
@@ -237,7 +261,7 @@ selectElement(componentIndex) {
         }
         
     });
-      this.containerMultipleChoiceOption[componentId].regularOptions = regularOptions;
+      this.formList[componentId].regularOptions = regularOptions;
   },
   
   
@@ -256,7 +280,7 @@ selectElement(componentIndex) {
 
       // required switch 
       requiredSwitch(componentId){
-        this.containerMultipleChoiceOption[componentId].required = !this.containerMultipleChoiceOption[componentId].required 
+        this.formList[componentId].required = !this.formList[componentId].required 
       },
 
     // fun to handle routes of modal 
@@ -272,9 +296,9 @@ selectElement(componentIndex) {
     // func to handle sortable comp update the list item after sort
     updateContainerMultipleChoiceOrder(newIndex, oldIndex) {
     // Update the order in the state
-    const movedComponent = this.containerMultipleChoiceOption[oldIndex];
-    this.containerMultipleChoiceOption.splice(oldIndex, 1);
-    this.containerMultipleChoiceOption.splice(newIndex, 0, movedComponent);
+    const movedComponent = this.formList[oldIndex];
+    this.formList.splice(oldIndex, 1);
+    this.formList.splice(newIndex, 0, movedComponent);
     },
   },
 })

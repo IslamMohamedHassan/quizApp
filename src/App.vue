@@ -1,9 +1,11 @@
 <script>
-import {  RouterView } from 'vue-router'
+import {  RouterLink, RouterView } from 'vue-router'
+
 
 export default{
   components:{
     RouterView,
+    RouterLink
 
 
   }
@@ -12,6 +14,10 @@ export default{
 
 <template>
   <main class="main">
+    <nav>
+      <router-link class="me-2" to="quiz">Quiz</router-link>
+      <router-link to="/">HOME</router-link>
+    </nav>
     <RouterView />
   </main>
 </template>
@@ -19,24 +25,27 @@ export default{
 <style>
 
 .main{
-  /* height: 100vh;*/
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
   background-color: #f0ebf8;
-
 }
 @media (max-width : 600px) {
   .main {
     width: 100% !important;
-    
+    height: 100%;
+    min-height: 100vh;
   }
 }
 a.router-link-exact-active {
   color: #686868;
   text-decoration: none;
+  font-weight: bolder;
+
 }
 
 a.router-link-exact-active:focus {
   background-color: transparent;
-  color: #000;
   font-weight: bolder;
 }
 /* header {

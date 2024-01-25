@@ -1,10 +1,6 @@
 <template>
     <header class="form-title-header pb-4 shadow-sm">
         <div class="border-1 border-bottom py-1">
-            {{ age }}
-            <br>
-            {{ Age }}
-            <button @click="incAge"></button>
             <Tiptap :title="'title'" :id="componentIndex"/>
         </div>
         <div class="border-1 border-bottom py-1">
@@ -25,23 +21,7 @@ export default {
         Tiptap,
     },
 
-    data(){
-        return{
-            age : 20,
-            apiData : {}
-        }
-    },
-    computed:{
-        Age(){
-            return this.age * 2
-        }
-    },
-    methods:{
-        incAge(){
-            this.age++
-        }
-       
-    },
+
     mounted(){
         console.log("assadsdsdsfds");
     }

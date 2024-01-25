@@ -52,7 +52,7 @@ export default {
     };
   },
   computed:{
-    ...mapState(formStore,["containerMultipleChoiceOption"])
+    ...mapState(formStore,["formList"])
   },
   methods: {
     ...mapActions(formStore,['updateContent']),
@@ -112,13 +112,13 @@ export default {
 
     this.compId = this.$props.id 
     if (this.$props.title === "description") {
-      console.log(this.containerMultipleChoiceOption[this.$props.id].formInfo.sectionDescription);
-      this.content =  `<p>${this.containerMultipleChoiceOption[this.$props.id].formInfo.sectionDescription}</p>`;
+      console.log(this.formList[this.$props.id].formInfo.sectionDescription);
+      this.content =  `<p>${this.formList[this.$props.id].formInfo.sectionDescription}</p>`;
   } else if (this.$props.title === "title") {
-      this.content =  `<p>${this.containerMultipleChoiceOption[this.$props.id].formInfo.sectionTitle}</p>`;
+      this.content =  `<p>${this.formList[this.$props.id].formInfo.sectionTitle}</p>`;
   }
    else if (this.$props.title === "question") {
-      this.content = `<p>${this.containerMultipleChoiceOption[this.$props.id].questionValue}</p>`;
+      this.content = `<p>${this.formList[this.$props.id].questionValue}</p>`;
     }
     
   
@@ -172,7 +172,7 @@ export default {
 
 
 
-.description
+.tiptap.description
 {
   font-size: 16px;
     height: 40px;
@@ -182,15 +182,15 @@ export default {
     padding: 0px 10px ;
     overflow: hidden; /* Hide content that overflows */
 }
-.title{
+.tiptap.title{
   font-size: 36px;
     height: 60px;
     line-height: 60px;
     outline: none;
     padding: 0px 10px ;
-    overflow: hidden; /* Hide content that overflows */
+    overflow: hidden; 
 }
-.question{
+.tiptap.question{
     font-size: 25px;
     min-height: 50px;
     border-bottom: 1px solid black;
