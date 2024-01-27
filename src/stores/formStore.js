@@ -8,7 +8,7 @@ export const formStore = defineStore('formStore', {
     // component data
       formList: [{
         formInfo :{section : 1 , sectionTitle : 'Untitled form',sectionDescription :'Form Description'},
-         data : [{ id:1 , placeholder: `Option`, image: null ,label:1 , value:'' , showImgIcon : false ,showImgAltIcon :false }],
+         data : [{ id:1 , placeholder: `Option`, image: null ,label:1 , value:'' , showImgIcon : false ,showImgAltIcon :false , isCorrect: false }],
       // flag to display other button
       addOtherBtn : true,
       selectedValue : 'Multiple Choice',
@@ -20,7 +20,8 @@ export const formStore = defineStore('formStore', {
       isSelected: false,
       regularOptions : [""],
       answerKeySelected : false,
-      questionMark : 0
+      questionMark : 0,
+     
       }] ,
       // end component data
 
@@ -58,8 +59,25 @@ export const formStore = defineStore('formStore', {
         { value: 'Dropdown', label: 'Dropdown', inputType: 'text',placeholder : "",icon: svgIcons.dropDown },
       ];
     },
+    totalPoints(){
+      let total = 0;
+      this.formList.forEach(element => {
+        total += element.questionMark
+      });
+      return total
+    }
   }, 
   actions: {
+
+    correctAnswer(componentIndex,optionIndex){
+      this.getFormList[componentIndex].data.forEach((element, index) => {
+        if (index === optionIndex) {
+          element.isCorrect = !element.isCorrect;
+        } else {
+          element.isCorrect = false;
+        }
+      });
+    },
 
     toggleAnswerKey(componentIndex){
       this.formList[componentIndex].answerKeySelected = false

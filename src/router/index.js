@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ModalData from '@/components/ModalData.vue'
 import QuizViewVue from '@/views/QuizView.vue'
+import SettingView from '@/views/SettingViwe.vue'
 
 
 const router = createRouter({
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/quiz',
       name: 'quiz',
       component: QuizViewVue,
+    },
+    {
+      path: '/setting',
+      name: 'setting',
+      component: SettingView,
     },
 
   ]

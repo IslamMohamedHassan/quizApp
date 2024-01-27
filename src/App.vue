@@ -1,11 +1,12 @@
 <script>
-import {  RouterLink, RouterView } from 'vue-router'
+import {  RouterView } from 'vue-router'
+import NavComponent from './components/NavComponent.vue';
 
 
 export default{
   components:{
     RouterView,
-    RouterLink
+    NavComponent,
 
 
   }
@@ -14,10 +15,7 @@ export default{
 
 <template>
   <main class="main">
-    <nav>
-      <router-link class="me-2" to="quiz">Quiz</router-link>
-      <router-link to="/">HOME</router-link>
-    </nav>
+    <NavComponent />
     <RouterView />
   </main>
 </template>

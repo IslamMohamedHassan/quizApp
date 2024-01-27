@@ -59,14 +59,14 @@
       <!-- Start row of multi choice and multi Checkboxes -->
       <div class="row align-items-center" v-if="getFormList[componentIndex].selectedValue === 'Multiple Choice' || getFormList[componentIndex].selectedValue == 'Checkboxes' || getFormList[componentIndex].selectedValue == 'Dropdown'">
         <div  @mouseenter="option.showImgIcon = true"  @mouseleave="option.showImgIcon = false"   v-for="(option,i) in  data.data" :key="i" >
-          <div class="d-flex align-items-center justify-content-between" v-if="option.placeholder !== 'Row' && option.placeholder !== 'Column'">
+          <div  class="d-flex align-items-center justify-content-between"  :class="{'bg-success' : option.isCorrect && getFormList[componentIndex].answerKeySelected}">
           <div>
-            <input v-if="getFormList[componentIndex].selectedValue === 'Multiple Choice'" type='radio' name="multiChoice"  class="form-check-input custom-radio"  :disabled="!getFormList[componentIndex].answerKeySelected">
+            <input style="cursor: pointer;"  v-if="getFormList[componentIndex].selectedValue === 'Multiple Choice'" type='radio' @click="correctAnswer(componentIndex,i)" :checked="option.isCorrect"   name="multiChoice"  class="form-check-input custom-radio"  :disabled="!getFormList[componentIndex].answerKeySelected">
             <input v-if="getFormList[componentIndex].selectedValue === 'Checkboxes'" type="checkbox"  class="form-check-input custom-radio"  :disabled="!getFormList[componentIndex].answerKeySelected"> 
           </div>
-          <div class=" flex-grow-1 py-2">
+          <div class=" flex-grow-1 py-2 position-relative">
             <input @focusin="option.showImgAltIcon = true"  @focusout="option.showImgAltIcon = false" type="text" v-model="option.value" class="answer-title w-100"  :placeholder="(option.placeholder ==='Option') ? option.placeholder  + ' '+ option.label : option.placeholder" :disabled="getFormList[componentIndex].answerKeySelected">
-            aa
+            <span v-if="option.isCorrect" class="position-absolute top-0 end-0">Correct</span> 
           </div>
           <div   v-if="!getFormList[componentIndex].answerKeySelected" class=" ms-3">
             <label  v-show="option.showImgIcon || option.showImgAltIcon"  :for="`answerImg${componentIndex}option${option.label}`"><i class=" fa fa-image image-label"></i></label>
@@ -154,7 +154,7 @@ export default {
   // watch the select box changes 
   
   methods: {
-    ...mapActions(formStore, ['toggleAnswerKey','answerKey','removeOptionImg','handleUploadImg','deselectElement','selectElement','requiredSwitch','removeComponent','updateSelectedValue','addOption','removeOption','resetOptionIdsAndLabels','getSelectedPlaceholder','handleDropdowns','duplicateComponent']),
+    ...mapActions(formStore, ['correctAnswer','toggleAnswerKey','answerKey','removeOptionImg','handleUploadImg','deselectElement','selectElement','requiredSwitch','removeComponent','updateSelectedValue','addOption','removeOption','resetOptionIdsAndLabels','getSelectedPlaceholder','handleDropdowns','duplicateComponent']),
    
   },
   
