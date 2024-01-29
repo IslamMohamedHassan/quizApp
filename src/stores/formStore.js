@@ -11,7 +11,7 @@ export const formStore = defineStore('formStore', {
          data : [{ id:1 , placeholder: `Option`, image: null ,label:1 , value:'' , showImgIcon : false ,showImgAltIcon :false , isCorrect: false }],
       // flag to display other button
       addOtherBtn : true,
-      selectedValue : 'Multiple Choice',
+      selectedValue : 'Choose',
       selectedIcon : svgIcons.multipleChoice,
       questionValue : "Initial content",
       imageFileDataUrl : "",
@@ -23,6 +23,16 @@ export const formStore = defineStore('formStore', {
       questionMark : 0,
      
       }] ,
+      formSetting:{
+        username: false,
+        password: false,
+        passwordValue:"",
+        isOnce:false,
+        anyTime:true,
+        duration:30,
+        specificTime:false,
+        examTime:{date:"",from:"",to:""},
+      },
       // end component data
 
       // id counter
@@ -54,20 +64,90 @@ export const formStore = defineStore('formStore', {
   //  options data
     optionValues() {
       return [
-        { value: 'Multiple Choice', label: 'Multiple Choice', inputType: 'radio',placeholder : "Option",icon: svgIcons.multipleChoice},
+        { value: 'Choose', label: 'Choose', inputType: 'radio',placeholder : "Option",icon: svgIcons.multipleChoice},
         { value: 'Checkboxes', label: 'Checkboxes', inputType: 'checkbox',placeholder : "Option",icon: svgIcons.checkBox },
-        { value: 'Dropdown', label: 'Dropdown', inputType: 'text',placeholder : "",icon: svgIcons.dropDown },
+        { value: 'True Or False', label: 'True Or False', inputType: 'text',placeholder : "",icon: svgIcons.trueOrFalse },
       ];
     },
-    totalPoints(){
+    totalPoints() {
       let total = 0;
       this.formList.forEach(element => {
-        total += element.questionMark
+        if (element.questionMark !== null && !isNaN(element.questionMark)) {
+          total += parseInt(element.questionMark, 10);
+        }
       });
-      return total
+    
+      return isNaN(total) ? "" : total.toString();
     }
   }, 
   actions: {
+
+    prepareFormData() {
+      // Extract data from formList
+      const formData = this.formList.map(item => {
+        const formInfo = item.formInfo;
+        const answers = item.data.map(option => {
+          return {
+            value: option.value,
+            isCorrect: option.isCorrect,
+          };
+        });
+  
+        return {
+          formInfo,
+          answers,
+          selectedValue: item.selectedValue,
+          questionValue: item.questionValue,
+          questionMark: item.questionMark,
+          // Add other properties as needed
+        };
+      });
+  
+      // Extract data from formSetting
+      const formSettingData = {
+        username: this.formSetting.username,
+        password: this.formSetting.password,
+        passwordValue: this.formSetting.passwordValue,
+        isOnce: this.formSetting.isOnce,
+        anyTime: this.formSetting.anyTime,
+        duration: this.formSetting.duration,
+        specificTime: this.formSetting.specificTime,
+        examTime: {
+          date: this.formSetting.examTime.date,
+          from: this.formSetting.examTime.from,
+          to: this.formSetting.examTime.to,
+        },
+      };
+  
+      // Combine the extracted data
+      const apiData = {
+        formData,
+        formSettingData,
+      };
+  
+      // Now you can send 'apiData' to your API
+      console.log(apiData);
+      // Your API call logic goes here
+    },
+
+    handleSetting(settingOption){
+      this.formSetting[settingOption] = !this.formSetting[settingOption]
+   
+      console.log(this.formSetting);
+    },
+    handleMarksChange(componentIndex) {
+     // Get the input value
+     let inputValue = this.getFormList[componentIndex].questionMark;
+
+     // Check if the input is empty or NaN
+     if (inputValue === '' || isNaN(inputValue)) {
+       this.getFormList[componentIndex].questionMark = 0; // Set to a default value, e.g., 0
+     } else {
+       // Parse the input value as an integer
+       this.getFormList[componentIndex].questionMark = parseInt(inputValue, 10);
+     }
+  
+    },
 
     correctAnswer(componentIndex,optionIndex){
       this.getFormList[componentIndex].data.forEach((element, index) => {
@@ -143,7 +223,7 @@ export const formStore = defineStore('formStore', {
       data : [{ id: this.getFormList.length + 1 , placeholder: `Option`, image: null ,label:1 , value:'', showImgIcon : false ,showImgAltIcon :false }],
     // flag to display other button
     addOtherBtn : true,
-    selectedValue : 'Multiple Choice',
+    selectedValue : 'Choose',
     questionValue : "Initial content",
     imageFileDataUrl : "",
     selectedInput: 'radio',
@@ -156,7 +236,7 @@ export const formStore = defineStore('formStore', {
         data : [{ id: this.getFormList.length + 1 , placeholder: `Option`, image: null ,label:1 , value:'', showImgIcon : false ,showImgAltIcon :false }],
       // flag to display other button
       addOtherBtn : true,
-      selectedValue : 'Multiple Choice',
+      selectedValue : 'Choose',
       questionValue : "Initial content",
       imageFileDataUrl : "",
       selectedInput: 'radio',
@@ -231,7 +311,7 @@ selectElement(componentIndex) {
   }
 },
 
-  //  Add Option to multiple Choices & CheckBox & Dropdown 
+  //  Add Option to Chooses & CheckBox & Dropdown 
   addOption(optionName,componentId) {
     this.count++
       this.formList[componentId].data.push({ id: this.count,  placeholder: optionName, image: null, value:'', showImgIcon : false ,showImgAltIcon :false });
@@ -248,7 +328,7 @@ selectElement(componentIndex) {
         
     },
 
-    //  Remove Option From multiple Choices & CheckBox & Dropdown 
+    //  Remove Option From Chooses & CheckBox & Dropdown 
     removeOption(id,componentId){
       const indexToRemove = this.formList[componentId].data.findIndex(option => option.id === id);
       // Remove the option using splice

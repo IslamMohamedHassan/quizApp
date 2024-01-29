@@ -1,0 +1,66 @@
+{
+    "formData": [
+        {
+            "formInfo": {
+                "section": 1,
+                "sectionTitle": "Untitled form",
+                "sectionDescription": "Form Description"
+            },
+            "answers": [
+                {
+                    "value": "4",
+                    "isCorrect": true
+                },
+                {
+                    "value": "5",
+                    "isCorrect": false
+                },
+                {
+                    "value": "6",
+                    "isCorrect": false
+                }
+            ],
+            "selectedValue": "Multiple Choice",
+            "questionValue": "2 + 2 ",
+            "questionMark": 2
+        },
+        {
+            "formInfo": {
+                "section": 1,
+                "sectionTitle": "Untitled form",
+                "sectionDescription": "Form Description"
+            },
+            "answers": [
+                {
+                    "value": "2",
+                    "isCorrect": true
+                },
+                {
+                    "value": "3",
+                    "isCorrect": false
+                },
+                {
+                    "value": "4",
+                    "isCorrect": false
+                }
+            ],
+            "selectedValue": "Multiple Choice",
+            "questionValue": "1+1",
+            "questionMark": 2
+        }
+    ],
+    "formSettingData": {
+        "username": false,
+        "password": false,
+        "passwordValue": "",
+        "isOnce": false,
+        "anyTime": false,
+        "duration": 30,
+        "specificTime": true,
+        "examTime": {
+            "date": "2024-01-16",
+            "from": "17:05",
+            "to": "16:06"
+        }
+    }
+}

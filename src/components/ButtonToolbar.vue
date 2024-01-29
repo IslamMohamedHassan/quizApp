@@ -7,7 +7,7 @@
             <button  type="button" class="btn btn-light" @click="openModal('question','any data')"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-tippy="{ content: 'Import Question', placement: 'right' }">
                 <span v-html="importQuestionsIcon"></span>
             </button>
-                <button @click="printObj" type="button" class="btn  btn-light" v-tippy="{ content: 'Add Section', placement: 'right' }" >
+                <button @click="prepareFormData" type="button" class="btn  btn-light" v-tippy="{ content: 'Add Section', placement: 'right' }" >
                     <span v-html="rectangleIcon"></span>
                 </button>
         </div>
@@ -43,7 +43,7 @@ export default {
     }
     ,
     methods:{
-        ...mapActions(formStore,['addComponent','openModal']),
+        ...mapActions(formStore,['prepareFormData','addComponent','openModal']),
 
     // update Button Group (responsive)
     updateButtonGroupType() {

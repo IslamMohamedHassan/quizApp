@@ -8,7 +8,7 @@
             <div class="status">{{currentQuestion}} out of {{ questions.length }} questions answered</div>
         </div>
 
-        <div v-show="currentQuestion === i" v-for="(question,i) in questions" :key="i" class="single-question">
+        <div  v-for="(question,i) in questions" :key="i" class="single-question">
             <div class="question">{{question.q}}</div>
             <div v-for="(answers,i) in question.answers" :key="i" class="answers">
                 <div @click.prevent="selectAnswer(answers.is_correct)" class="answer">{{answers.text}}</div>

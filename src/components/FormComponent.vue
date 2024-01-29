@@ -51,24 +51,25 @@
           <div>
             <p>{{ getFormList[componentIndex].questionValue}}</p> 
           </div>
-          <div><input class="question-marks" min="0" v-model="getFormList[componentIndex].questionMark" type="number"> <span class="fs-6">Points</span></div>
+          <div><input class="question-marks" min="0" v-model="getFormList[componentIndex].questionMark" @change="handleMarksChange(componentIndex)" type="number"> <span class="fs-6">Points</span></div>
         </div>
       </div>
       <!-- End Choose correct answers   -->
 
       <!-- Start row of multi choice and multi Checkboxes -->
-      <div class="row align-items-center" v-if="getFormList[componentIndex].selectedValue === 'Multiple Choice' || getFormList[componentIndex].selectedValue == 'Checkboxes' || getFormList[componentIndex].selectedValue == 'Dropdown'">
+      <div class="row align-items-center" v-if="getFormList[componentIndex].selectedValue === 'Choose' || getFormList[componentIndex].selectedValue == 'Checkboxes'">
         <div  @mouseenter="option.showImgIcon = true"  @mouseleave="option.showImgIcon = false"   v-for="(option,i) in  data.data" :key="i" >
           <div  class="d-flex align-items-center justify-content-between"  :class="{'bg-success' : option.isCorrect && getFormList[componentIndex].answerKeySelected}">
           <div>
-            <input style="cursor: pointer;"  v-if="getFormList[componentIndex].selectedValue === 'Multiple Choice'" type='radio' @click="correctAnswer(componentIndex,i)" :checked="option.isCorrect"   name="multiChoice"  class="form-check-input custom-radio"  :disabled="!getFormList[componentIndex].answerKeySelected">
+            <input style="cursor: pointer;"  v-if="getFormList[componentIndex].selectedValue === 'Choose'" type='radio' @click="correctAnswer(componentIndex,i)" :checked="option.isCorrect"   name="multiChoice"  class="form-check-input custom-radio"  :disabled="!getFormList[componentIndex].answerKeySelected">
             <input v-if="getFormList[componentIndex].selectedValue === 'Checkboxes'" type="checkbox"  class="form-check-input custom-radio"  :disabled="!getFormList[componentIndex].answerKeySelected"> 
           </div>
+          
           <div class=" flex-grow-1 py-2 position-relative">
             <input @focusin="option.showImgAltIcon = true"  @focusout="option.showImgAltIcon = false" type="text" v-model="option.value" class="answer-title w-100"  :placeholder="(option.placeholder ==='Option') ? option.placeholder  + ' '+ option.label : option.placeholder" :disabled="getFormList[componentIndex].answerKeySelected">
             <span v-if="option.isCorrect" class="position-absolute top-0 end-0">Correct</span> 
           </div>
-          <div   v-if="!getFormList[componentIndex].answerKeySelected" class=" ms-3">
+          <div    v-if="!getFormList[componentIndex].answerKeySelected" class=" ms-3">
             <label  v-show="option.showImgIcon || option.showImgAltIcon"  :for="`answerImg${componentIndex}option${option.label}`"><i class=" fa fa-image image-label"></i></label>
             <input style="display: none;" type="file"  :id="`answerImg${componentIndex}option${option.label}`"   @change="event => handleUploadImg(componentIndex, event, 'Answer', i)" >
 
@@ -85,15 +86,30 @@
         </div>
         </transition>
         </div>
-        <div  v-if="!getFormList[componentIndex].answerKeySelected" class="col-12 py-3">
+        <div  v-if="!getFormList[componentIndex].answerKeySelected" class="col-12 pt-3">
           <button class=" border-0 bg-transparent add-field-btn" @click="addOption('Option',componentIndex)">Add Option</button>
         </div>
        
       </div> 
+
+      <!-- true or false -->
+      <div class="row mt-5 justify-content-evenly" v-if="getFormList[componentIndex].selectedValue === 'True Or False'">
+        
+       <div class="col-md-6 d-flex align-items-center">
+         <input  class="form-check-input custom-radio mb-1" id="trueAnswer" type="radio" name="trueOrFalse">
+         <label class="ps-2 fs-4" for="trueAnswer">True</label>
+       </div>
+       <div class="col-md-6 d-flex align-items-center">
+         <input class="form-check-input custom-radio mb-1" id="falseAnswer" type="radio"  name="trueOrFalse">
+         <label class="ps-2 fs-4" for="falseAnswer">False</label>
+       </div>
+      </div>
+    </div>
+      <div>
       <!-- End row of multi choice and multi Checkboxes -->
       <hr class="my-2">
       <!--  -->
-      <div v-if="!getFormList[componentIndex].answerKeySelected"  class="row">
+      <div v-if="!getFormList[componentIndex].answerKeySelected"  class="row p-2">
         <div  class="col-lg-6 d-flex justify-content-start align-items-center">
           <button class="btn btn-outline-primary me-3" @click.prevent="answerKey(componentIndex)"><i class="fa-regular fa-square-check"></i> Answer Key</button>
           <span class="text-muted">( {{getFormList[componentIndex].questionMark}} Point )</span>
@@ -109,7 +125,7 @@
             <label class="form-check-label me-2 ms-3" for="flexSwitchCheckDefault">Required</label>
 
             <div class="form-check form-switch">
-              <input class="form-check-input custom-switch" type="checkbox" @click="requiredSwitch(componentIndex)" role="switch" id="flexSwitchCheckDefault" :checked ="getFormList[componentIndex].required">
+              <input class="form-check-input custom-switch" type="checkbox" @click="requiredSwitch(componentIndex)" role="switch" id="flexSwitchCheckDefault" :checked="getFormList[componentIndex].required">
             </div>
           </div>
         </div>
@@ -154,7 +170,7 @@ export default {
   // watch the select box changes 
   
   methods: {
-    ...mapActions(formStore, ['correctAnswer','toggleAnswerKey','answerKey','removeOptionImg','handleUploadImg','deselectElement','selectElement','requiredSwitch','removeComponent','updateSelectedValue','addOption','removeOption','resetOptionIdsAndLabels','getSelectedPlaceholder','handleDropdowns','duplicateComponent']),
+    ...mapActions(formStore, ['handleMarksChange','correctAnswer','toggleAnswerKey','answerKey','removeOptionImg','handleUploadImg','deselectElement','selectElement','requiredSwitch','removeComponent','updateSelectedValue','addOption','removeOption','resetOptionIdsAndLabels','getSelectedPlaceholder','handleDropdowns','duplicateComponent']),
    
   },
   
